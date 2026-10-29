@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://mc-heads.net; style-src 'self'; font-src 'self'; script-src 'self'">
+<title>Ethane Launcher</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand"><img src="assets/img/ethane.png" alt="">ETHANE</div>
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-view="play">Play</button>
+    <button class="tab" data-view="settings">Settings</button>
+  </nav>
+  <div class="winbtns">
+    <button id="wMin" title="Minimize"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button>
+    <button id="wMax" title="Maximize"><svg viewBox="0 0 12 12"><path d="M2.5 2.5h7v7h-7z"/></svg></button>
+    <button id="wClose" class="x" title="Close"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>
+  </div>
+</header>
+
+<div class="update" id="update" hidden>
+  <span>Ethane Launcher <b id="updVer"></b> is out.</span>
+  <button class="link" id="updGo">Download it</button>
+</div>
+
+<main>
+  <!-- ── Play ── -->
+  <section class="view play on" id="view-play">
+    <img class="mark" src="assets/img/ethane.png" alt="">
+    <div class="play-grid">
+      <div class="hero">
+        <p class="build"><i></i><span id="buildLine">fabric 1.21.11</span></p>
+        <h1>Stay<br><span>cold.</span></h1>
+        <p class="tagline">The best <em>free</em> and <em>open source</em> utility client for Minecraft Fabric 1.21.11.</p>
+
+        <div class="launch">
+          <button class="btn btn-play cut" id="play">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>
+            <span id="playLabel">Play</span>
+          </button>
+          <div class="progress" id="progress" hidden>
+            <div class="track"><i id="progressBar"></i></div>
+            <div class="pmeta"><span id="progressMsg">Getting ready...</span><button class="link" id="cancel">Cancel</button></div>
+          </div>
+          <p class="hint" id="hint">Just hit Play. The first launch sets up Minecraft, Fabric and Ethane for you in <code>.ethane</code>, and every launch after that grabs the newest Ethane build.</p>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="card cut">
+          <p class="label">Playing as</p>
+          <div class="player">
+            <img id="head" alt="">
+            <form id="nameForm" autocomplete="off">
+              <input id="name" maxlength="16" spellcheck="false" title="Click to change your name">
+              <small id="nameNote">click the name to change it</small>
+            </form>
+          </div>
+          <p class="small" id="playerHelp"></p>
+        </div>
+
+        <div class="quick">
+          <button class="qbtn cut" data-folder="mods"><svg viewBox="0 0 24 24"><path d="M3 7h7l2 2h9v10H3z"/></svg>Mods</button>
+          <button class="qbtn cut" data-folder="screenshots"><svg viewBox="0 0 24 24"><path d="M4 7h4l2-2h4l2 2h4v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Screenshots</button>
+          <button class="qbtn cut" data-folder="game"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9h16"/></svg>Game folder</button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="tickers" aria-hidden="true">
+      <div class="tick b"><div class="tick-track" id="tickB"></div></div>
+      <div class="tick a"><div class="tick-track" id="tickA"></div></div>
+    </div>
+  </section>
+
+  <!-- ── Settings ── -->
+  <section class="view settings" id="view-settings">
+    <div class="set-wrap">
+      <div class="set-head">
+        <p class="label">Settings</p>
+        <h2>Tune it.<br><span>Then play.</span></h2>
+      </div>
+
+      <div class="set-list">
+        <div class="row">
+          <div><h3>Minecraft account <small class="opt">optional</small></h3><p id="msText">Only needed for online-mode servers like Hypixel. Without it you play under your chosen name in singleplayer, LAN and cracked servers.</p></div>
+          <button class="btn btn-ms btn-sm cut" id="msBtn">
+            <svg viewBox="0 0 24 24"><path fill="#f25022" d="M2 2h9.5v9.5H2z"/><path fill="#7fba00" d="M12.5 2H22v9.5h-9.5z"/><path fill="#00a4ef" d="M2 12.5h9.5V22H2z"/><path fill="#ffb900" d="M12.5 12.5H22V22h-9.5z"/></svg>
+            <span id="msLabel">Link Microsoft</span>
+          </button>
+        </div>
+        <div class="row">
+          <div><h3>Memory</h3><p>How much RAM Minecraft may use. 4 GB is plenty for Ethane; more helps with big resource packs.</p></div>
+          <div class="ram">
+            <input type="range" id="ram" min="1024" step="512">
+            <output id="ramOut">4 GB</output>
+          </div>
+        </div>
+        <div class="row">
+          <div><h3>Hide launcher while playing</h3><p>It comes back on its own when you close the game.</p></div>
+          <button class="sw" id="hideOnLaunch" role="switch"></button>
+        </div>
+        <div class="row">
+          <div><h3>Tell me about launcher updates</h3><p>Ethane itself always updates on launch. This is just for the launcher.</p></div>
+          <button class="sw" id="checkUpdates" role="switch"></button>
+        </div>
+        <div class="row">
+          <div><h3>Java arguments</h3><p>Advanced. Leave empty unless you know you need it.</p></div>
+          <input class="text" id="jvmArgs" placeholder="-XX:+UseZGC" spellcheck="false">
+        </div>
+        <div class="row">
+          <div><h3>Repair</h3><p>Re-checks and re-downloads Minecraft, Fabric and Ethane. Your worlds, settings and other mods are kept.</p></div>
+          <button class="btn btn-alt btn-sm cut" id="repair">Repair install</button>
+        </div>
+        <div class="row">
+          <div><h3>Logs</h3><p>Send these in the Discord if something goes wrong.</p></div>
+          <button class="btn btn-alt btn-sm cut" id="logs">Open logs</button>
+        </div>
+      </div>
+
+      <div class="about">
+        <p>Ethane Launcher <b id="aboutVer"></b> &middot; game files in <code id="dataDir"></code></p>
+        <p class="links">
+          <button class="link" data-href="https://github.com/EthaneClient/Ethane">Source on GitHub</button>
+          <button class="link" data-href="https://ethaneclient.github.io">Website</button>
+          <button class="link" data-href="https://discord.gg/6E9KE2T8PY">Discord</button>
+        </p>
+        <p class="fine">Free &amp; open source &middot; not affiliated with Mojang AB or Microsoft</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden>
+  <p id="toastMsg"></p>
+  <div class="toast-acts" id="toastActs"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
